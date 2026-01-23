@@ -1,5 +1,5 @@
 from langchain_openai import ChatOpenAI
-from langchain_google_gen2 import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage, SystemMessage
 import os
 import json
