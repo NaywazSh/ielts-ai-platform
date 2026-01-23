@@ -4,12 +4,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 text-white">
       {/* Welcome Header */}
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Welcome back, Scholar</h1>
-          <p className="text-slate-400 mt-2">Your exam is in 14 days. Let's make today count.</p>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+            Welcome back, Scholar
+          </h1>
+          <p className="text-slate-400 mt-2">Your exam is coming up. Let's make today count.</p>
         </div>
-        <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-medium transition">
+        <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-indigo-900/20">
           Take Mock Exam
         </button>
       </div>
@@ -24,35 +26,35 @@ export default function Dashboard() {
 
       {/* Recent Activity & Weaknesses */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Chart Area (Placeholder) */}
-        <div className="lg:col-span-2 bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Writing Performance History</h3>
-          <div className="h-64 flex items-end justify-between gap-2 px-4">
-            {/* Fake Chart Bars for UI Demo */}
+        {/* Main Chart Area */}
+        <div className="lg:col-span-2 bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+          <h3 className="text-lg font-semibold mb-6">Performance History</h3>
+          <div className="h-64 flex items-end justify-between gap-2 px-2">
             {[6.0, 6.5, 6.0, 7.0, 6.5, 7.5, 7.0].map((score, i) => (
-              <div key={i} className="w-full bg-slate-800 rounded-t-lg relative group">
+              <div key={i} className="w-full bg-slate-800 rounded-t-lg relative group h-full flex items-end">
                 <div 
-                  className="absolute bottom-0 w-full bg-indigo-600 rounded-t-lg transition-all duration-500 group-hover:bg-indigo-400"
+                  className="w-full bg-indigo-600 rounded-t-lg transition-all duration-500 group-hover:bg-indigo-400"
                   style={{ height: `${(score / 9) * 100}%` }}
                 ></div>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-black px-2 py-1 rounded text-xs transition-opacity">
-                  {score}
-                </div>
               </div>
             ))}
+          </div>
+          <div className="flex justify-between text-slate-500 text-xs mt-4">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
           </div>
         </div>
 
         {/* Weakness Analysis */}
-        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
           <h3 className="text-lg font-semibold mb-4">Focus Areas</h3>
-          <div className="space-y-4">
-            <SkillBar label="Lexical Resource" percent={65} />
-            <SkillBar label="Coherence" percent={80} />
-            <SkillBar label="Task Response" percent={55} color="bg-red-500" />
+          <div className="space-y-6">
+            <SkillBar label="Lexical Resource" percent={65} color="bg-indigo-500" />
+            <SkillBar label="Coherence" percent={80} color="bg-emerald-500" />
+            <SkillBar label="Task Response" percent={55} color="bg-rose-500" />
+            <SkillBar label="Grammar" percent={70} color="bg-amber-500" />
           </div>
-          <div className="mt-6 p-4 bg-indigo-900/20 border border-indigo-500/20 rounded-xl">
-            <p className="text-sm text-indigo-200">💡 Tip: Work on your connecting words to improve Coherence.</p>
+          <div className="mt-8 p-4 bg-indigo-900/20 border border-indigo-500/20 rounded-xl">
+            <p className="text-sm text-indigo-200">💡 Tip: Use more complex sentence structures to boost Grammar score.</p>
           </div>
         </div>
       </div>
@@ -60,10 +62,10 @@ export default function Dashboard() {
   );
 }
 
-// Helper Components for this page
+// Helper Components
 function StatCard({ title, value, icon: Icon, color, bg }: any) {
   return (
-    <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex items-center gap-4 hover:border-slate-700 transition">
+    <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex items-center gap-4 hover:border-slate-700 transition duration-300">
       <div className={`p-4 rounded-xl ${bg} ${color}`}>
         <Icon size={24} />
       </div>
@@ -75,10 +77,10 @@ function StatCard({ title, value, icon: Icon, color, bg }: any) {
   );
 }
 
-function SkillBar({ label, percent, color = "bg-indigo-500" }: any) {
+function SkillBar({ label, percent, color }: any) {
   return (
     <div>
-      <div className="flex justify-between text-sm mb-1">
+      <div className="flex justify-between text-sm mb-2">
         <span className="text-slate-300">{label}</span>
         <span className="text-slate-400">{percent}%</span>
       </div>
