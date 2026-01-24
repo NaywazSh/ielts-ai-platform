@@ -1,8 +1,22 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv() # Call this at the very top of your main.py
+
+# --- Core Framework ---
 fastapi
 uvicorn
+
+# --- Environment & Security ---
+python-dotenv      # Correct package name 
+python-multipart   # Required for Speaking Coach (handling audio files)
+
+# --- AI & LangChain ---
 langchain>=0.2.0
 langchain-core
 langchain-community
-langchain-google-genai  # If using Gemini
-langchain-openai        # If using GPT
-python-dotenv
+langchain-google-genai  # For Gemini
+langchain-openai        # For GPT (if you switch)
+
+# --- Speaking Section ---
+openai-whisper     # For transcribing speech to text
