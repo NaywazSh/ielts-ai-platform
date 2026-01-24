@@ -6,12 +6,18 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="IELTS AI Master")
 
 # Allow frontend to communicate
+# PLACE THE CORS MIDDLEWARE HERE
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://ielts-ai-platform-7rab.vercel.app", # Your actual Vercel URL
+        "http://localhost:3000"                     # For local testing
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# ... (rest of your code starts from line 16)
 
 class WritingSubmission(BaseModel):
     question: str
