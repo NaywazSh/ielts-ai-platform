@@ -45,7 +45,7 @@ export default function GoogleMeetPlacement() {
         <div className="lg:col-span-2 bg-white rounded-2xl overflow-hidden min-h-[700px] shadow-2xl">
           {/* REPLACE THE 'src' BELOW WITH YOUR GOOGLE CALENDAR EMBED LINK */}
           <iframe 
-            src="https://calendar.google.com/calendar/appointments/schedules/YOUR_UNIQUE_ID_HERE?gv=true" 
+            src="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ19DYe_sXOy28i3S6MCrTkFBrcSCAX5K_eDXjwrWx0iSC13XMuJrh4uLBe0EWibdX0hbKKh8_eF?gv=true" 
             style={{ border: 0 }} 
             width="100%" 
             height="700" 
