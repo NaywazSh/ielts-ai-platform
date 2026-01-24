@@ -1,18 +1,9 @@
-# --- Core Framework ---
 fastapi
 uvicorn
-
-# --- Environment & Security ---
-python-dotenv      # Correct package name 
-python-multipart   # Required for Speaking Coach (handling audio files)
-
-# --- AI & LangChain ---
+python-dotenv
+python-multipart
 langchain>=0.2.0
 langchain-core
 langchain-community
-langchain-google-genai  # For Gemini
-langchain-openai        # For GPT (if you switch)
-
-# --- Speaking Section ---   
-openai-whisper  # For transcribing speech to text
-git+https://github.com/openai/whisper.git
+langchain-google-genai
+openai-whisper
