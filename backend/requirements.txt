@@ -18,5 +18,6 @@ langchain-community
 langchain-google-genai  # For Gemini
 langchain-openai        # For GPT (if you switch)
 
-# --- Speaking Section ---
-openai-whisper     # For transcribing speech to text
+# --- Speaking Section ---   
+openai-whisper  # For transcribing speech to text
+git+https://github.com/openai/whisper.git
