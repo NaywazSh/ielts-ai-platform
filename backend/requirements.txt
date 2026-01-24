@@ -1,8 +1,8 @@
 fastapi
 uvicorn
-pydantic
-langchain
-langchain-openai
-langchain-google-genai
-python-multipart
-requests
+langchain>=0.2.0
+langchain-core
+langchain-community
+langchain-google-genai  # If using Gemini
+langchain-openai        # If using GPT
+python-dotenv
