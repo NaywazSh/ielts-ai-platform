@@ -3,18 +3,34 @@ import { TrendingUp, Target, Clock, Award } from "lucide-react";
 export default function Dashboard() {
   return (
     <div className="space-y-8 text-white">
-    import Link from "next/link"; // Add this at the very top of your file
+ import Link from "next/link"; // 1. Make sure this import is at the very top!
+import { TrendingUp, Target, Clock, Award } from "lucide-react";
 
-{/* Welcome Header */}
-<div className="flex flex-col md:flex-row justify-between items-end gap-4">
-  <div>
-    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
-      Welcome back, Scholar
-    </h1>
-    <p className="text-slate-400 mt-2">Your exam is coming up. Let's make today count.</p>
-  </div>
-  <div className="flex gap-3">
-    <Link href="/placement-test">
+export default function Dashboard() {
+  return (
+    <div className="space-y-8 text-white">
+      {/* Welcome Header */}
+      <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+        <div>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+            Welcome back, Scholar
+          </h1>
+          <p className="text-slate-400 mt-2">Your exam is coming up. Let's make today count.</p>
+        </div>
+        
+        <div className="flex gap-3">
+          {/* 2. Wrap the button in a Link component */}
+          <Link href="/placement-test">
+            <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-2 rounded-lg font-medium transition cursor-pointer">
+              Take Placement Test (10 min)
+            </button>
+          </Link>
+
+          <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-indigo-900/20">
+            Take Mock Exam
+          </button>
+        </div>
+      </div>
       <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-2 rounded-lg font-medium transition">
         Take Placement Test
       </button>
