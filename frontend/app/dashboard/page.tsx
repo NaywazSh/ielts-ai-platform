@@ -1,9 +1,5 @@
-import { TrendingUp, Target, Clock, Award } from "lucide-react";
-
-export default function Dashboard() {
-  return (
-    <div className="space-y-8 text-white">
- import Link from "next/link"; // 1. Make sure this import is at the very top!
+"use client";
+import Link from "next/link";
 import { TrendingUp, Target, Clock, Award } from "lucide-react";
 
 export default function Dashboard() {
@@ -17,29 +13,19 @@ export default function Dashboard() {
           </h1>
           <p className="text-slate-400 mt-2">Your exam is coming up. Let's make today count.</p>
         </div>
-        
         <div className="flex gap-3">
-          {/* 2. Wrap the button in a Link component */}
+          {/* This Link makes the button work */}
           <Link href="/placement-test">
             <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-2 rounded-lg font-medium transition cursor-pointer">
               Take Placement Test (10 min)
             </button>
           </Link>
-
+          
           <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-indigo-900/20">
             Take Mock Exam
           </button>
         </div>
       </div>
-      <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-2 rounded-lg font-medium transition">
-        Take Placement Test
-      </button>
-    </Link>
-    <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-indigo-900/20">
-      Take Mock Exam
-    </button>
-  </div>
-</div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -51,7 +37,6 @@ export default function Dashboard() {
 
       {/* Recent Activity & Weaknesses */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Chart Area */}
         <div className="lg:col-span-2 bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
           <h3 className="text-lg font-semibold mb-6">Performance History</h3>
           <div className="h-64 flex items-end justify-between gap-2 px-2">
@@ -69,7 +54,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Weakness Analysis */}
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
           <h3 className="text-lg font-semibold mb-4">Focus Areas</h3>
           <div className="space-y-6">
@@ -87,7 +71,6 @@ export default function Dashboard() {
   );
 }
 
-// Helper Components
 function StatCard({ title, value, icon: Icon, color, bg }: any) {
   return (
     <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex items-center gap-4 hover:border-slate-700 transition duration-300">
