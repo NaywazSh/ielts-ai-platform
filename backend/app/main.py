@@ -1,30 +1,25 @@
 import os
-from dotenv import load_dotenv
-# MUST be called before app initialization if you use env vars in app config
-load_dotenv() 
+# from dotenv import load_dotenv
+# load_dotenv() # Optional on Render (it uses Environment Variables settings)
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.services.ai_engine import ai_engine
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="IELTS AI Master")
 
-# Allow frontend to communicate
-# PLACE THE CORS MIDDLEWARE HERE
+# --- CORS SETUP ---
+# This allows Vercel to talk to Render
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://ielts-ai-platform-7rab.vercel.app", # Your actual Vercel URL
-        "http://localhost:3000"                     # For local testing
-    ],
+    allow_origins=["*"], # For now, allow all. Later change to your Vercel URL.
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# ... (rest of your code starts from line 16)
 
+# --- WRITING SECTION ---
 class WritingSubmission(BaseModel):
     question: str
     answer: str
@@ -32,34 +27,19 @@ class WritingSubmission(BaseModel):
 @app.post("/api/v1/evaluate/writing")
 async def evaluate_writing(submission: WritingSubmission):
     try:
+        # Call the AI Engine (OpenAI/Gemini)
         result = await ai_engine.evaluate_writing(submission.question, submission.answer)
-        # Here you would typically save 'result' to your PostgreSQL database
         return result
     except Exception as e:
+        print(f"Error: {str(e)}") # Print to Render logs
         raise HTTPException(status_code=500, detail=str(e))
 
+# --- HEALTH CHECK ---
 @app.get("/")
 def health_check():
     return {"status": "AI Core Online", "provider": ai_engine.provider}
 
-    from fastapi import UploadFile, File
-#import whisper # You'll need to add 'openai-whisper' to requirements.txt
-
-@app.post("/evaluate_speaking")
-async def evaluate_speaking(file: UploadFile = File(...)):
-    # 1. Save and Transcribe
-    with open("temp_audio.wav", "wb") as buffer:
-        buffer.write(await file.read())
-    
-    model = whisper.load_model("base")
-    result = model.transcribe("temp_audio.wav")
-    transcription = result["text"]
-
-    # 2. AI Grading (Reuse your ai_engine logic)
-    feedback = ai_engine.analyze_speaking(transcription) 
-    return {"transcription": transcription, "feedback": feedback}
-
-    # Dummy data for testing - eventually this could come from a database
+# --- READING SECTION (Safe to keep) ---
 READING_TESTS = {
     "test_1": {
         "title": "The Impact of Artificial Intelligence on Modern Education",
