@@ -43,7 +43,7 @@ def health_check():
     return {"status": "AI Core Online", "provider": ai_engine.provider}
 
     from fastapi import UploadFile, File
-import whisper # You'll need to add 'openai-whisper' to requirements.txt
+#import whisper # You'll need to add 'openai-whisper' to requirements.txt
 
 @app.post("/evaluate_speaking")
 async def evaluate_speaking(file: UploadFile = File(...)):
