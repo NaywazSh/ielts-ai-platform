@@ -1,9 +1,11 @@
 fastapi
 uvicorn
-python-dotenv
-python-multipart
-langchain>=0.2.0
+pydantic
+langchain
 langchain-core
 langchain-community
+langchain-openai
 langchain-google-genai
-openai-whisper
+python-multipart
+requests
+python-dotenv
