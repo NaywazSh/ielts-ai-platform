@@ -9,3 +9,5 @@ langchain-google-genai
 python-multipart
 requests
 python-dotenv
+sqlalchemy
+psycopg2-binary
