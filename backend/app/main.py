@@ -1,59 +1,96 @@
 import os
-# from dotenv import load_dotenv
-# load_dotenv() # Optional on Render (it uses Environment Variables settings)
-
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from sqlalchemy.orm import Session
 from app.services.ai_engine import ai_engine
+
+# Import Database tools
+from app.core.database import engine, Base, get_db
+from app.models.reading import ReadingTest, ReadingPassage, Question
 
 app = FastAPI(title="IELTS AI Master")
 
+# --- 1. CREATE TABLES ON STARTUP (The Auto-Migrate Trick) ---
+# This checks your database and creates the tables if they don't exist
+Base.metadata.create_all(bind=engine)
+
 # --- CORS SETUP ---
-# This allows Vercel to talk to Render
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # For now, allow all. Later change to your Vercel URL.
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- WRITING SECTION ---
-class WritingSubmission(BaseModel):
-    question: str
-    answer: str
+# --- READING ENDPOINTS (COMMERCIAL GRADE) ---
 
-@app.post("/api/v1/evaluate/writing")
-async def evaluate_writing(submission: WritingSubmission):
-    try:
-        # Call the AI Engine (OpenAI/Gemini)
-        result = await ai_engine.evaluate_writing(submission.question, submission.answer)
-        return result
-    except Exception as e:
-        print(f"Error: {str(e)}") # Print to Render logs
-        raise HTTPException(status_code=500, detail=str(e))
-
-# --- HEALTH CHECK ---
-@app.get("/")
-def health_check():
-    return {"status": "AI Core Online", "provider": ai_engine.provider}
-
-# --- READING SECTION (Safe to keep) ---
-READING_TESTS = {
-    "test_1": {
-        "title": "The Impact of Artificial Intelligence on Modern Education",
-        "passage": "Artificial Intelligence (AI) has moved from the realm of science fiction into our daily lives... [Long IELTS-style passage here] ...Ultimately, the goal is to enhance the human teacher, not replace them.",
-        "questions": [
-            {"id": 1, "text": "When did AI move into daily lives?", "answer": "Recently"},
-            {"id": 2, "text": "What is the ultimate goal of AI in education?", "answer": "To enhance the human teacher"}
-        ]
-    }
-}
-
-@app.get("/reading/{test_id}")
-async def get_reading_test(test_id: str):
-    test = READING_TESTS.get(test_id)
+# Get specific test with all passages and questions
+@app.get("/api/v1/reading/{test_id}")
+def get_reading_test(test_id: int, db: Session = Depends(get_db)):
+    # Fetch test with relationships (This is SQLAlchemy magic)
+    test = db.query(ReadingTest).filter(ReadingTest.id == test_id).first()
+    
     if not test:
-        return {"error": "Test not found"}
-    return test
+        raise HTTPException(status_code=404, detail="Test not found")
+    
+    # Structure the data for the frontend
+    response = {
+        "id": test.id,
+        "title": test.title,
+        "passages": []
+    }
+    
+    for p in test.passages:
+        passage_data = {
+            "id": p.id,
+            "title": p.title,
+            "content": p.content,
+            "questions": []
+        }
+        for q in p.questions:
+            passage_data["questions"].append({
+                "id": q.id,
+                "text": q.text,
+                "options": q.options,
+                "type": q.question_type,
+                # In a real app, maybe don't send correct_answer to frontend ;)
+                # But for now we need it for instant grading script
+                "correct_answer": q.correct_answer 
+            })
+        response["passages"].append(passage_data)
+        
+    return response
+
+# --- SEED DATA ENDPOINT (Only for you to add data easily) ---
+@app.post("/api/v1/admin/seed-test")
+def seed_database(db: Session = Depends(get_db)):
+    # Check if data exists
+    if db.query(ReadingTest).first():
+        return {"message": "Data already exists!"}
+
+    # Create Test
+    new_test = ReadingTest(title="Cambridge IELTS 18 - Test 1")
+    db.add(new_test)
+    db.commit()
+    db.refresh(new_test)
+
+    # Create Passage
+    passage_text = "By the year 2050, nearly 80% of the earth's population will reside in urban centers..."
+    new_passage = ReadingPassage(test_id=new_test.id, title="Vertical Farming", content=passage_text)
+    db.add(new_passage)
+    db.commit()
+    db.refresh(new_passage)
+
+    # Create Questions
+    q1 = Question(
+        passage_id=new_passage.id,
+        text="What percentage of population will be urban by 2050?",
+        question_type="MCQ",
+        options=["60%", "70%", "80%", "90%"],
+        correct_answer="80%"
+    )
+    db.add(q1)
+    db.commit()
+
+    return {"status": "Database Populated with Real Data"}
